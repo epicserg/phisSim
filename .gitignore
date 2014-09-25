@@ -1,0 +1,8 @@
+/shared/build/**
+/core/build/**
+/web/build/**
+/worker/build/**
+/gradle/**
+*.iml
+*.iws
+*.ipr

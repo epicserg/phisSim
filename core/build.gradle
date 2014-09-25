@@ -1,0 +1,7 @@
+apply plugin: 'application'
+
+mainClassName = "Launcher"
+
+dependencies{
+    compile project(':shared')
+}
