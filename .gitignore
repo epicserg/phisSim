@@ -2,8 +2,8 @@
 /core/build/
 /web/build/
 /worker/build/
-#*.iws
-#*.ipr
+*.iws
+*.ipr
 gradlew.bat
 
-#*.iml
+*.iml
