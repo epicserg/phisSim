@@ -2,11 +2,8 @@
 /core/build/
 /web/build/
 /worker/build/
-phisSim.iml
-phisSim.iws
-phisSim.ipr
-/core/core.iml
-/shared/shared.iml
-/worker/worker.iml
-/web/web.iml
+*.iws
+*.ipr
 gradlew.bat
+
+*.iml
