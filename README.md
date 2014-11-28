@@ -1,14 +1,20 @@
 phisSim
 =======
 
-the proof of concept of akka clustering possiblities
+The proof of concept of akka clustering possiblities
 
-This is a follwer/worker pattern based cluster on akka.
+This is a follwer/woorker pattern based cluster on akka.
 
 The cluster should compute phisical simulations.
-The manager project is for creating and routing tasks and acts as a cluster seed.
+The core project is for creating and routing tasks and acts as a cluster seed.
+
 The worker project computes.
+
 Shared is for holding common code.
+
 The web project is for input and result rendering.
+
+
+To run a cluster go to core and write gradle run.
 
 
