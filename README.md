@@ -3,12 +3,12 @@ phisSim
 
 The proof of concept of akka clustering possiblities
 
-This is a follwer/woorker pattern based cluster on akka.
+This is a leader/follower pattern based cluster on akka.
 
 The cluster should compute phisical simulations.
 The core project is for creating and routing tasks and acts as a cluster seed.
 
-The worker project computes.
+The worker(follower) project computes the given tasks. You can add many followers.
 
 Shared is for holding common code.
 
