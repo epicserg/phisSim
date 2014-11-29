@@ -1,31 +1,43 @@
 package eu.phisSim.worker
 
-import akka.actor.Actor
-import eu.phisSim.shared.messages.{CalculationJob, JobCalculated}
+import akka.actor.{ActorLogging, RootActorPath, Props, Actor}
+import akka.cluster.{Member, Cluster}
+import akka.cluster.ClusterEvent.{MemberUp, MemberEvent, InitialStateAsEvents}
+import eu.phisSim.shared.messages.{NewWorkerJoining, CalculationJob, JobCalculated}
 import eu.phisSim.shared.model.{PhysicalObject, PhysicalVector}
 import eu.phisSim.shared.wrapper.Apfloat
 
 import scala.annotation.tailrec
 
 
-class Worker extends Actor {
+class Worker extends Actor with ActorLogging{
 
+  /**
+   * Determines the precision of euler method. delta - time .
+   */
   private val dt = Apfloat("0.00001")
 
-  def receive = {
-    case CalculationJob(allObjects, objectsToCalculate) =>
-      val calculatedObjects: List[PhysicalObject] = calculateRec(allObjects, objectsToCalculate)
-      sender ! JobCalculated(calculatedObjects)
+  private val cluster = Cluster(context.system)
+
+
+
+  override def preStart(): Unit = {
+    cluster.subscribe(self,initialStateMode = InitialStateAsEvents,
+      classOf[MemberEvent])
   }
 
-  private def calculate(allObjects: List[PhysicalObject],
-                        objectsToCalculate: List[PhysicalObject]): List[PhysicalObject] = {
-    var result: List[PhysicalObject] = Nil
-    for (physicalObject <- objectsToCalculate) {
-      result = calculateObject(allObjects, physicalObject) :: result
+  override def postStop(): Unit = cluster.unsubscribe(self)
+
+
+  def receive = {
+    case CalculationJob(allObjects, objectsToCalculate) => {
+      val calculatedObjects: List[PhysicalObject] = calculateRec(allObjects, objectsToCalculate)
+      sender ! JobCalculated(calculatedObjects)
     }
-    result
   }
+
+
+
 
   private def calculateRec(all: List[PhysicalObject],
                            objectsToCalculate: List[PhysicalObject]): List[PhysicalObject] = {
@@ -64,13 +76,13 @@ class Worker extends Actor {
                                     objectToCalculate: PhysicalObject): PhysicalVector = {
     var acceleration: PhysicalVector = PhysicalVector(0, 0, 0)
     for (otherObject <- allObjects) {
-      val acc = getAccleration(objectToCalculate, otherObject);
+      val acc = getAcceleration(objectToCalculate, otherObject);
       acceleration = acceleration.getSuperPositionWith(acc);
     }
     return acceleration
   }
 
-  private def getAccleration(observedObject: PhysicalObject, otherObject: PhysicalObject): PhysicalVector = {
+  private def getAcceleration(observedObject: PhysicalObject, otherObject: PhysicalObject): PhysicalVector = {
     val distanceSqr: Apfloat = getDistanceSquared(observedObject.position, otherObject.position)
     if (distanceSqr == 0) {
       return PhysicalVector(0, 0, 0)

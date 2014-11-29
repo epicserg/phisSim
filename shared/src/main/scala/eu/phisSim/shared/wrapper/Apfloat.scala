@@ -2,6 +2,9 @@ package eu.phisSim.shared.wrapper
 
 import org.apfloat.{ApfloatMath, Apfloat => JApfloat}
 
+/**
+ * A class with companion object to simplify Apfloat use in scala code.
+ */
 object Apfloat {
 
   val DefaultPrecision = 100L
@@ -22,8 +25,8 @@ object Apfloat {
 
   implicit def longToApfloat(x: Long): Apfloat = apply(x)
 }
-
-class Apfloat(val apfloat: JApfloat) {
+@SerialVersionUID(100L)
+class Apfloat(val apfloat: JApfloat)extends Serializable {
 
   def +(that: Apfloat): Apfloat = {
     apfloat.add(that.apfloat)

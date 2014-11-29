@@ -1,3 +1,9 @@
+apply plugin: 'application'
+
+mainClassName = "WorkerLauncher"
+
+//applicationDefaultJvmArgs=["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"]
+
 dependencies {
     compile project(':shared')
 }

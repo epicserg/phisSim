@@ -1,24 +1,30 @@
 
 import akka.actor.{Props, ActorSystem}
+import akka.cluster.Cluster
 import com.typesafe.config.ConfigFactory
 import eu.phisSim.core.actors.{ManagerActor, ListenerActor}
 import eu.phisSim.shared.messages.StartCalculation
 import eu.phisSim.shared.model.{PhysicalVector, PhysicalObject}
 
+
+/**
+ * This starts the cluster seed.
+ */
 object Launcher extends App {
 
-  //calculate(4 , PhysicalObject(1L,PhysicalVector(),PhysicalVector())::Nil)
   calculate(4,getObjects())
 
 
+
+
   def calculate(nrOfWorkers: Int, initialObjects: List[PhysicalObject]) {
-    val actorSystem = ActorSystem("physicalSim", ConfigFactory.load())
-    val listener = actorSystem.actorOf(Props[ListenerActor], name = "listener")
 
-    val managerProps = Props(new ManagerActor(listener, initialObjects, 4)).withDispatcher("manager-dispatcher")
-    val manager = actorSystem.actorOf(managerProps, name = "manager")
 
-    manager ! StartCalculation
+    val actorSystem = ActorSystem("ClusterSystem", ConfigFactory.load())
+
+     Cluster(actorSystem)
+      val managerProps = Props(new ManagerActor(initialObjects))
+      val manager = actorSystem.actorOf(managerProps, name = "manager")
 
   }
 
