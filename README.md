@@ -13,6 +13,8 @@ Below is the list of supported simulations:
 
 1)Object chunk position and movement calculation in 3D space gravity field using brute force euler method.
 
+Other simulations may be added in the future. Right now I have chosen the easiest method.
+
 
 Simulations
 ============
